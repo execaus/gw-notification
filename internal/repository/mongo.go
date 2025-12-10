@@ -58,3 +58,7 @@ func NewMongoRepository(ctx context.Context, cfg config.DatabaseConfig) *MongoRe
 
 	return r
 }
+
+func (r *MongoRepository) Close(ctx context.Context) error {
+	return r.db.Client().Disconnect(ctx)
+}

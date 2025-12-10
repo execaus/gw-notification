@@ -12,6 +12,10 @@ type Repository interface {
 	Save(ctx context.Context, exchange domain.Exchange) (primitive.ObjectID, error)
 }
 
-func NewRepository(ctx context.Context, cfg config.DatabaseConfig) Repository {
-	return NewMongoRepository(ctx, cfg)
+func NewRepository(
+	ctx context.Context,
+	cfg config.DatabaseConfig,
+) (repo Repository, close func(ctx context.Context) error) {
+	r := NewMongoRepository(ctx, cfg)
+	return r, r.Close
 }

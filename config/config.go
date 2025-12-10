@@ -13,6 +13,7 @@ import (
 type Config struct {
 	Server   ServerConfig
 	Database DatabaseConfig
+	EventBus EventBusConfig
 }
 
 type ServerConfig struct {
@@ -25,6 +26,11 @@ type DatabaseConfig struct {
 	User     string
 	Password string
 	Name     string
+}
+
+type EventBusConfig struct {
+	Host string
+	Port string
 }
 
 func LoadConfig() *Config {
@@ -60,6 +66,9 @@ func LoadConfig() *Config {
 	cfg.Database.User = os.Getenv("DATABASE_USER")
 	cfg.Database.Password = os.Getenv("DATABASE_PASSWORD")
 	cfg.Database.Name = os.Getenv("DATABASE_NAME")
+
+	cfg.EventBus.Host = os.Getenv("EVENT_BUS_HOST")
+	cfg.EventBus.Port = os.Getenv("EVENT_BUS_PORT")
 
 	return cfg
 }

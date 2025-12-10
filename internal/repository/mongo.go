@@ -18,27 +18,27 @@ const (
 )
 
 const (
-	ExchangeCollection = "exchange"
+	exchangeCollection = "exchange"
 )
 
 type MongoRepository struct {
 	db *mongo.Database
 }
 
-func (r *MongoRepository) Save(ctx context.Context, exchange domain.Exchange) (*primitive.ObjectID, error) {
-	result, err := r.db.Collection(ExchangeCollection).InsertOne(ctx, exchange)
+func (r *MongoRepository) Save(ctx context.Context, exchange domain.Exchange) (primitive.ObjectID, error) {
+	result, err := r.db.Collection(exchangeCollection).InsertOne(ctx, exchange)
 	if err != nil {
 		zap.L().Error(err.Error())
-		return nil, err
+		return primitive.NilObjectID, err
 	}
 
 	oid, ok := result.InsertedID.(primitive.ObjectID)
 	if !ok {
 		zap.L().Error(ErrNotObjectID.Error())
-		return nil, ErrNotObjectID
+		return primitive.NilObjectID, ErrNotObjectID
 	}
 
-	return &oid, nil
+	return oid, nil
 }
 
 func NewMongoRepository(ctx context.Context, cfg config.DatabaseConfig) *MongoRepository {

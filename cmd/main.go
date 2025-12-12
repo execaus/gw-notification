@@ -24,14 +24,19 @@ func main() {
 	r, closeFn := repository.NewRepository(ctx, cfg.Database)
 	s := service.NewExchangeService(r)
 
-	handler.NewHandler(ctx, s, cfg.EventBus)
+	h := handler.NewHandler(ctx, s, cfg.EventBus)
+
+	zap.L().Info("service started")
 
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
 
 	<-stop
-	zap.L().Info("Shutting down server...")
+	zap.L().Info("shutting down server...")
 	if err := closeFn(ctx); err != nil {
+		zap.L().Error(err.Error())
+	}
+	if err := h.Close(); err != nil {
 		zap.L().Error(err.Error())
 	}
 	zap.L().Info("server stopped")

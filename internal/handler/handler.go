@@ -40,3 +40,7 @@ func NewHandler(ctx context.Context, s service.Service, cfg config.EventBusConfi
 
 	return h
 }
+
+func (h *Handler) Close() error {
+	return h.consumer.Close()
+}

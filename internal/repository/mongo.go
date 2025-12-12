@@ -47,7 +47,13 @@ func NewMongoRepository(ctx context.Context, cfg config.DatabaseConfig) *MongoRe
 	ctx, cancel := context.WithTimeout(ctx, connectTimeout)
 	defer cancel()
 
-	uri := fmt.Sprintf("mongodb://%s:%v", cfg.Host, cfg.Port)
+	uri := fmt.Sprintf(
+		"mongodb://%s:%s@%s:%v/?authSource=admin",
+		cfg.User,
+		cfg.Password,
+		cfg.Host,
+		cfg.Port,
+	)
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
 	if err != nil {
